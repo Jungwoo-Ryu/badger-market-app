@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "875012199153",
+    "project_id": "badger-market-app",
+    "storage_bucket": "badger-market-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875012199153:android:569066de3cdfd358f80f50",
+        "android_client_info": {
+          "package_name": "com.example.badger_market"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5YI4B86ytud3n6m4H79KGzJg5ibkXyKA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

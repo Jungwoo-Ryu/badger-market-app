@@ -6,8 +6,8 @@ import 'package:firebase_core/firebase_core.dart';
 // import 'package:badger_market/page/loginPage.dart';
 import 'package:flutter/material.dart';
 
-import 'auth/auth_gate.dart';
-import 'auth/login_or_register.dart';
+import 'services/auth/auth_gate.dart';
+import 'services/auth/login_or_register.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

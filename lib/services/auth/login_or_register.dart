@@ -1,7 +1,7 @@
 import "package:badger_market/page/register_page.dart";
 import "package:flutter/material.dart";
 
-import "../page/login_page.dart";
+import '../../page/login_page.dart';
 
 class LoginOrRegister extends StatefulWidget {
   const LoginOrRegister({super.key});

@@ -1,4 +1,4 @@
-import 'package:badger_market/auth/auth_service.dart';
+import 'package:badger_market/services/auth/auth_service.dart';
 import 'package:badger_market/components/my_button.dart';
 import 'package:badger_market/components/my_textfield.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +41,6 @@ class LoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text("Badger Market",),
-            
           ],
         ),
       ),

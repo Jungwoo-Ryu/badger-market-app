@@ -19,27 +19,37 @@ class RegisterPage extends StatelessWidget {
   void register(BuildContext context) {
     //get auth service
     final _auth = AuthService();
-    if(_pwController.text == _confirmPwController.text){
-      try{
-        _auth.signUpWithEmailPassword(
-          _emailController.text, 
-          _pwController.text,);
-
-      } catch (e) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-          title: Text(e.toString())
-        ));
-      }
-    } 
-    else {
+    if(!_emailController.text.endsWith("@wisc.edu")){
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
-          title: Text("Passwords don't match!")
+          title: Text("email must end with '@wisc.edu'")
         ));
+    } else {
+      if(_pwController.text == _confirmPwController.text){
+        try{
+          _auth.signUpWithEmailPassword(
+            _emailController.text, 
+            _pwController.text,);
+
+        } catch (e) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+            title: Text(e.toString())
+          ));
+        }
+      } 
+      else {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+            title: Text("Passwords don't match!")
+          ));
+      }
+
     }
+
 
   }
 

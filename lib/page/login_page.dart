@@ -54,7 +54,7 @@ class LoginPage extends StatelessWidget {
             ImageIcon(
               AssetImage("assets/images/Bucky.png"),
               size: 100,
-              color:Colors.red,
+              color:Colors.red.shade400,
               ),
             // Logo
             // Icon(

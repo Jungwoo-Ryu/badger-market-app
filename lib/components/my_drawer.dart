@@ -1,3 +1,4 @@
+import 'package:badger_market/page/messnager_page.dart';
 import 'package:flutter/material.dart';
 
 import '../services/auth/auth_service.dart';
@@ -51,7 +52,11 @@ class MyDrawer extends StatelessWidget {
             child: ListTile(
               title: const Text("M E S S A G E"),
               leading: const Icon(Icons.message),
-              onTap: () {},
+              onTap: () {
+                Navigator.pop(context);
+
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MessengerPage()));
+              },
             ),
           ),
 

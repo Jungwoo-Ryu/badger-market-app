@@ -1,3 +1,4 @@
+import 'package:badger_market/page/messnager_page.dart';
 import 'package:badger_market/services/auth/login_or_register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,20 +10,22 @@ class AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context,snapshot){
+        builder: (context,snapshot)
+        {
           // user is logged in
           if(snapshot.hasData){
-            return HomePage();
+            return HomePage(); 
           }
-
           // user is not loggeed in
           else {
             return const LoginOrRegister();
           }
-        }),
+        }
+        ),
     );
   }
 }

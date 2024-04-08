@@ -1,5 +1,5 @@
 import 'package:badger_market/firebase_options.dart';
-import 'package:badger_market/page/home.dart';
+// import 'package:badger_market/page/home.dart';
 import 'package:badger_market/page/login_page.dart';
 import 'package:badger_market/page/register_page.dart';
 import 'package:firebase_core/firebase_core.dart';

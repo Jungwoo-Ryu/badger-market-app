@@ -31,11 +31,16 @@ class RegisterPage extends StatelessWidget {
           _auth.signUpWithEmailPassword(
             _emailController.text, 
             _pwController.text,);
-
+            showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+            title: Text("Email has been sent! please verify your email and log in!"),
+            ));
         } catch (e) {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
+            // title: Text(e.toString())
             title: Text(e.toString())
           ));
         }

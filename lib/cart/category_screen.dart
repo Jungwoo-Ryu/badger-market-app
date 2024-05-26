@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../DTO/product.dart';
+import '../DTO/product_row.dart';
 import '../DTO/products.dart';
 import 'cart_app_bar_action.dart';
 

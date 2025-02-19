@@ -71,7 +71,7 @@ class _ProductScreenState extends State<ProductScreen> {
     List<Widget> sizeSelectionWidgets = product.sizes
             ?.map(
               (s) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 1),
                 child: GestureDetector(
                   onTap: () {
                     setSelectedSize(s);
@@ -114,18 +114,18 @@ class _ProductScreenState extends State<ProductScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: MediaQuery.of(context).size.height * .35,
+              height: MediaQuery.of(context).size.height * .25, // Reduced height
               padding: const EdgeInsets.symmetric(vertical: 18),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Expanded(
-                  //   child: Image.network(
-                  //     selectedImageUrl!,
-                  //     fit: BoxFit.cover,
-                  //     colorBlendMode: BlendMode.multiply,
-                  //   ),
-                  // ),
+                  Expanded(
+                    child: Image.network(
+                      selectedImageUrl!,
+                      fit: BoxFit.cover,
+                      colorBlendMode: BlendMode.multiply,
+                    ),
+                  ),
                   const SizedBox(height: 18),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

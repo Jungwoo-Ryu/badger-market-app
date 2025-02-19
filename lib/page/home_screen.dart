@@ -4,7 +4,6 @@ import '../DTO/products.dart';
 import '../cart/cart_app_bar_action.dart';
 import '../components/my_drawer.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -26,8 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var listViewPadding =
-        const EdgeInsets.symmetric(horizontal: 16, vertical: 24);
+    var listViewPadding = const EdgeInsets.symmetric(horizontal: 8, vertical: 8); // Adjusted padding
     List<Widget> searchResultTiles = [];
     if (searchString.isNotEmpty) {
       searchResultTiles = products
@@ -47,20 +45,25 @@ class _HomeScreenState extends State<HomeScreen> {
           CartAppBarAction(),
         ],
         backgroundColor: Colors.red,
-        
       ),
-      
       drawer: const MyDrawer(),
       body: searchString.isNotEmpty
-          ? GridView.count(
+          ? Padding(
               padding: listViewPadding,
-              crossAxisCount: 2,
-              mainAxisSpacing: 24,
-              crossAxisSpacing: 24,
-              childAspectRatio: .78,
-              children: searchResultTiles,
+              child: GridView.count(
+                crossAxisCount: 2,
+                mainAxisSpacing: 8, // Adjusted spacing
+                crossAxisSpacing: 8, // Adjusted spacing
+                childAspectRatio: .7,
+                children: searchResultTiles,
+              ),
             )
-            : null
+          : Center(
+              child: Text(
+                'No products found',
+                // style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
     );
   }
 }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../DTO/product.dart';
@@ -110,34 +109,32 @@ class _ProductScreenState extends State<ProductScreen> {
           CartAppBarAction(),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height * .35,
-            // color: kGreyBackground,
-            padding: const EdgeInsets.symmetric(vertical: 18),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Image.network(
-                    selectedImageUrl!,
-                    fit: BoxFit.cover,
-                    // color: kGreyBackground,
-                    colorBlendMode: BlendMode.multiply,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * .35,
+              padding: const EdgeInsets.symmetric(vertical: 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Expanded(
+                  //   child: Image.network(
+                  //     selectedImageUrl!,
+                  //     fit: BoxFit.cover,
+                  //     colorBlendMode: BlendMode.multiply,
+                  //   ),
+                  // ),
+                  const SizedBox(height: 18),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: imagePreviews,
                   ),
-                ),
-                const SizedBox(height: 18),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: imagePreviews,
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: Padding(
+            Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,7 +174,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       children: sizeSelectionWidgets,
                     ),
                   ],
-                  const Spacer(),
+                  const SizedBox(height: 18),
                   Center(
                     child: CallToActionButton(
                       onPressed: () => cart.add(
@@ -188,12 +185,12 @@ class _ProductScreenState extends State<ProductScreen> {
                       ),
                       labelText: 'Add to Cart',
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

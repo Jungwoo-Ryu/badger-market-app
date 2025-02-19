@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
 import '../DTO/product_tile.dart';
 import '../DTO/products.dart';
-import '../DTO/search_bar.dart';
 import '../cart/cart_app_bar_action.dart';
 import '../components/my_drawer.dart';
 

@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "875012199153",
     "project_id": "badger-market-app",
-    "storage_bucket": "badger-market-app.appspot.com"
+    "storage_bucket": "badger-market-app.firebasestorage.app"
   },
   "client": [
     {

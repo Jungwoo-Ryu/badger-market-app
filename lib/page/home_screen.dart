@@ -38,8 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: SearchBar(
-          onChanged: setSearchString,
+        title: Container(
+          width: MediaQuery.of(context).size.width * 0.7, // Adjust the width as needed
+          height: MediaQuery.of(context).size.height * 0.05, // Adjust the height as needed 
+          child: SearchBar(
+            onChanged: setSearchString,
+          ),
         ),
         actions: const [
           CartAppBarAction(),
@@ -50,12 +54,20 @@ class _HomeScreenState extends State<HomeScreen> {
       body: searchString.isNotEmpty
           ? Padding(
               padding: listViewPadding,
-              child: GridView.count(
-                crossAxisCount: 2,
-                mainAxisSpacing: 8, // Adjusted spacing
-                crossAxisSpacing: 8, // Adjusted spacing
-                childAspectRatio: .7,
-                children: searchResultTiles,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    GridView.count(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 8, // Adjusted spacing
+                      crossAxisSpacing: 8, // Adjusted spacing
+                      childAspectRatio: .7,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: searchResultTiles,
+                    ),
+                  ],
+                ),
               ),
             )
           : Center(

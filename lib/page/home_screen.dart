@@ -1,4 +1,6 @@
+import 'package:badger_market/page/post_product_screen.dart';
 import 'package:flutter/material.dart';
+
 import '../DTO/product_tile.dart';
 import '../DTO/products.dart';
 import '../cart/cart_app_bar_action.dart';
@@ -22,6 +24,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void setSearchString(String value) => setState(() {
         searchString = value;
       });
+
+  void _postProduct() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PostProductScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +85,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 // style: Theme.of(context).textTheme.headline6,
               ),
             ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _postProduct,
+        child: const Icon(Icons.add),
+        backgroundColor: Colors.red,
+      ),
     );
   }
 }

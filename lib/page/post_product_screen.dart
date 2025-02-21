@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
+import 'package:flutter/cupertino.dart';
 
 class PostProductScreen extends StatefulWidget {
   const PostProductScreen({Key? key}) : super(key: key);
@@ -34,13 +35,31 @@ class _PostProductScreenState extends State<PostProductScreen> {
     }
   }
 
+  void _removeImage(int index) {
+    setState(() {
+      _imageFiles.removeAt(index);
+    });
+  }
+
+  String _formatPrice(String value) {
+    if (value.isEmpty) return '';
+    value = value.replaceAll(RegExp(r'[^\d.]'), '');
+    final parts = value.split('.');
+    if (parts.length > 2) return value;
+    final integerPart = parts[0];
+    final decimalPart = parts.length > 1 ? parts[1] : '';
+    final formattedIntegerPart = integerPart.replaceAllMapped(
+        RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+    return '\$' + formattedIntegerPart + (decimalPart.isNotEmpty ? '.$decimalPart' : '');
+  }
+
   Future<void> _submitProduct() async {
     if (_formKey.currentState!.validate()) {
       // Save product to Firebase
       await FirebaseFirestore.instance.collection('products').add({
         'name': _nameController.text,
         'description': _descriptionController.text,
-        'price': double.parse(_priceController.text),
+        'price': double.parse(_priceController.text.replaceAll('\$', '').replaceAll(',', '')),
         'imageUrls': _imageFiles.map((file) => file?.path).toList(),
       });
 
@@ -103,11 +122,21 @@ class _PostProductScreenState extends State<PostProductScreen> {
                   controller: _priceController,
                   decoration: InputDecoration(labelText: 'Price'),
                   keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    // Add input formatter to format the price
+                    TextInputFormatter.withFunction((oldValue, newValue) {
+                      final text = _formatPrice(newValue.text);
+                      return newValue.copyWith(
+                        text: text,
+                        selection: TextSelection.collapsed(offset: text.length),
+                      );
+                    }),
+                  ],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a price';
                     }
-                    if (double.tryParse(value) == null) {
+                    if (double.tryParse(value.replaceAll('\$', '').replaceAll(',', '')) == null) {
                       return 'Please enter a valid price';
                     }
                     return null;
@@ -116,21 +145,38 @@ class _PostProductScreenState extends State<PostProductScreen> {
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _pickImage,
-                  child: Text('Pick Images (up to 3)'),
+                  child: Text('Upload Images'),
                 ),
                 const SizedBox(height: 16),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: _imageFiles.map((file) {
-                    return file != null
-                        ? Image.file(
-                            File((file as XFile).path),
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          )
-                        : Container();
+                  children: _imageFiles.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    XFile? file = entry.value;
+                    return Stack(
+                      children: [
+                        Image.file(
+                          File(file!.path),
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                        Positioned(
+                          right: 0,
+                          child: GestureDetector(
+                            onTap: () => _removeImage(index),
+                            child: Container(
+                              color: Colors.black54,
+                              child: Icon(
+                                CupertinoIcons.clear_circled,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
                   }).toList(),
                 ),
                 const SizedBox(height: 16),

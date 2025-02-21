@@ -44,6 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
             (p) => ProductTile(product: p),
           )
           .toList();
+    } else {
+      searchResultTiles = products.map((p) => ProductTile(product: p)).toList();
     }
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.red,
       ),
       drawer: const MyDrawer(),
-      body: searchString.isNotEmpty
+      body: searchResultTiles.isNotEmpty
           ? Padding(
               padding: listViewPadding,
               child: SingleChildScrollView(

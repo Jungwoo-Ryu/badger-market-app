@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/cupertino.dart';
 
 class PostProductScreen extends StatefulWidget {
   const PostProductScreen({Key? key}) : super(key: key);
@@ -43,13 +43,14 @@ class _PostProductScreenState extends State<PostProductScreen> {
 
   String _formatPrice(String value) {
     if (value.isEmpty) return '';
-    final formatter = NumberFormat.currency(symbol: '\$', decimalDigits: 2);
-    try {
-      final double price = double.parse(value.replaceAll(',', ''));
-      return formatter.format(price);
-    } catch (e) {
-      return value;
-    }
+    value = value.replaceAll(RegExp(r'[^\d.]'), '');
+    final parts = value.split('.');
+    if (parts.length > 2) return value;
+    final integerPart = parts[0];
+    final decimalPart = parts.length > 1 ? parts[1] : '';
+    final formattedIntegerPart = integerPart.replaceAllMapped(
+        RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+    return '\$' + formattedIntegerPart + (decimalPart.isNotEmpty ? '.$decimalPart' : '');
   }
 
   Future<void> _submitProduct() async {
@@ -168,7 +169,7 @@ class _PostProductScreenState extends State<PostProductScreen> {
                             child: Container(
                               color: Colors.black54,
                               child: Icon(
-                                Icons.close,
+                                CupertinoIcons.clear_circled,
                                 color: Colors.white,
                               ),
                             ),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,18 +20,19 @@ class _PostProductScreenState extends State<PostProductScreen> {
   final _descriptionController = TextEditingController();
   final _priceController = TextEditingController();
   final List<XFile?> _imageFiles = [];
+  bool _isHovering = false;
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final List<XFile?> images = await picker.pickMultiImage();
-    if (_imageFiles.length + images.length <= 10) {
+    if (_imageFiles.length + images.length <= 5) {
       setState(() {
         _imageFiles.addAll(images);
       });
     } else {
-      // Show an error message if more than 10 images are selected
+      // Show an error message if more than 5 images are selected
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('You can only select up to 10 images.')),
+        SnackBar(content: Text('You can only select up to 5 images.')),
       );
     }
   }
@@ -53,14 +55,42 @@ class _PostProductScreenState extends State<PostProductScreen> {
     return '\$' + formattedIntegerPart + (decimalPart.isNotEmpty ? '.$decimalPart' : '');
   }
 
+  Future<List<String>> _uploadImages() async {
+    List<String> imageUrls = [];
+    for (XFile? imageFile in _imageFiles) {
+      if (imageFile != null) {
+        try {
+          File file = File(imageFile.path);
+          String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+          Reference storageRef = FirebaseStorage.instance.ref().child('products/$fileName');
+          UploadTask uploadTask = storageRef.putFile(file);
+          TaskSnapshot taskSnapshot = await uploadTask;
+          String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+          imageUrls.add(downloadUrl);
+          print('Uploaded image URL: $downloadUrl'); // Log the uploaded image URL
+        } catch (e) {
+          print('Error uploading image: $e');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error uploading image: $e')),
+          );
+        }
+      }
+    }
+    return imageUrls;
+  }
+
   Future<void> _submitProduct() async {
     if (_formKey.currentState!.validate()) {
+      // Upload images and get their URLs
+      List<String> imageUrls = await _uploadImages();
+      print('Image URLs: $imageUrls'); // Log the image URLs
+
       // Save product to Firebase
       await FirebaseFirestore.instance.collection('products').add({
         'name': _nameController.text,
         'description': _descriptionController.text,
         'price': double.parse(_priceController.text.replaceAll('\$', '').replaceAll(',', '')),
-        'imageUrls': _imageFiles.map((file) => file?.path).toList(),
+        'imageUrls': imageUrls,
       });
 
       // Clear the form
@@ -110,7 +140,7 @@ class _PostProductScreenState extends State<PostProductScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.camera_alt, size: 30, color: Colors.grey),
-                        Text('${_imageFiles.length}/10', style: TextStyle(color: Colors.grey)),
+                        Text('${_imageFiles.length}/5', style: TextStyle(color: Colors.grey)),
                       ],
                     ),
                   ),
@@ -208,14 +238,20 @@ class _PostProductScreenState extends State<PostProductScreen> {
                 ),
                 const SizedBox(height: 16),
                 Center(
-                  child: ElevatedButton(
-                    onPressed: _submitProduct,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(161, 32, 43, 1), // Set button color
-                    ),
-                    child: Text(
-                      'Add Product',
-                      style: TextStyle(color: Colors.white),
+                  child: MouseRegion(
+                    onHover: (event) => setState(() => _isHovering = true),
+                    onExit: (event) => setState(() => _isHovering = false),
+                    child: ElevatedButton(
+                      onPressed: _submitProduct,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _isHovering
+                            ? const Color.fromRGBO(161, 32, 43, 0.8) // Slightly darker color on hover
+                            : const Color.fromRGBO(161, 32, 43, 1), // Original color
+                      ),
+                      child: Text(
+                        'Add Product',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ),

@@ -1,8 +1,9 @@
+import 'package:badger_market/DTO/product.dart';
 import 'package:badger_market/page/post_product_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../DTO/product_tile.dart';
-import '../DTO/products.dart';
 import '../components/my_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,10 +15,25 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late String searchString;
+  List<Product> products = [];
+  bool isLoading = true;
+
   @override
   void initState() {
     searchString = '';
     super.initState();
+    fetchProducts();
+  }
+
+  Future<void> fetchProducts() async {
+    setState(() {
+      isLoading = true;
+    });
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('products').get();
+    setState(() {
+      products = snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
+      isLoading = false;
+    });
   }
 
   void setSearchString(String value) => setState(() {
@@ -62,30 +78,27 @@ class _HomeScreenState extends State<HomeScreen> {
         iconTheme: IconThemeData(color: Colors.white), // Set hamburger button color to white
       ),
       drawer: const MyDrawer(),
-      body: searchResultTiles.isNotEmpty
-          ? Padding(
-              padding: listViewPadding,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    GridView.count(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 8, // Adjusted spacing
-                      crossAxisSpacing: 8, // Adjusted spacing
-                      childAspectRatio: .7,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      children: searchResultTiles,
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : RefreshIndicator(
+              onRefresh: fetchProducts,
+              child: searchResultTiles.isNotEmpty
+                  ? Padding(
+                      padding: listViewPadding,
+                      child: GridView.count(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 8, // Adjusted spacing
+                        crossAxisSpacing: 8, // Adjusted spacing
+                        childAspectRatio: .7,
+                        children: searchResultTiles,
+                      ),
+                    )
+                  : Center(
+                      child: Text(
+                        'No products found',
+                        // style: Theme.of(context).textTheme.headline6,
+                      ),
                     ),
-                  ],
-                ),
-              ),
-            )
-          : Center(
-              child: Text(
-                'No products found',
-                // style: Theme.of(context).textTheme.headline6,
-              ),
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: _postProduct,

@@ -150,7 +150,11 @@ class _PostProductScreenState extends State<PostProductScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Product Name'),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter a product name',
+                    labelText: 'Product Name'
+                    ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a product name';
@@ -161,7 +165,10 @@ class _PostProductScreenState extends State<PostProductScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _descriptionController,
-                  decoration: InputDecoration(labelText: 'Product Description'),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Product Description'
+                    ),
                   maxLines: 5,
                   keyboardType: TextInputType.multiline,
                   validator: (value) {
@@ -174,7 +181,10 @@ class _PostProductScreenState extends State<PostProductScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _priceController,
-                  decoration: InputDecoration(labelText: 'Price'),
+                  decoration: InputDecoration(
+                    labelText: 'Price',
+                    border: OutlineInputBorder(),
+                  ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     // Add input formatter to format the price
@@ -200,6 +210,9 @@ class _PostProductScreenState extends State<PostProductScreen> {
                 Center(
                   child: ElevatedButton(
                     onPressed: _submitProduct,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromRGBO(161, 32, 43, 1), // Set button color
+                    ),
                     child: Text(
                       'Add Product',
                       style: TextStyle(color: Colors.white),

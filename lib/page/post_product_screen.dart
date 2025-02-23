@@ -85,8 +85,9 @@ class _PostProductScreenState extends State<PostProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Product'),
-        backgroundColor: Colors.red,
+        title: Text('Add Product', style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color.fromRGBO(161, 32, 43, 1),
+        iconTheme: IconThemeData(color: Colors.white), // Set back button color to white
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -199,7 +200,10 @@ class _PostProductScreenState extends State<PostProductScreen> {
                 Center(
                   child: ElevatedButton(
                     onPressed: _submitProduct,
-                    child: Text('Add Product'),
+                    child: Text(
+                      'Add Product',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],

@@ -58,7 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: const [
           // CartAppBarAction(),
         ],
-        backgroundColor: Colors.red,
+        backgroundColor: const Color.fromRGBO(161, 32, 43, 1),
+        iconTheme: IconThemeData(color: Colors.white), // Set hamburger button color to white
       ),
       drawer: const MyDrawer(),
       body: searchResultTiles.isNotEmpty
@@ -89,7 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: _postProduct,
         child: const Icon(Icons.add),
-        backgroundColor: Colors.red,
+        backgroundColor: const Color.fromRGBO(161, 32, 43, 1),
+        foregroundColor: Colors.white, // Set "+" button color to white
       ),
     );
   }

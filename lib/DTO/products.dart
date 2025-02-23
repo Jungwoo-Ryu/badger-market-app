@@ -9,7 +9,8 @@ List<Product> products = [
         'https://images-na.ssl-images-amazon.com/images/I/81K7OAepB9L._AC_UX466_.jpg',
         'https://images-na.ssl-images-amazon.com/images/I/812T%2Bu00R4L._AC_UX466_.jpg'
       ],
-      cost: 12.99
+      cost: 12.99,
+      description: 'good shit'
       ),
   Product(
     name: 'Short Sleeve Henley - Blue',
@@ -20,6 +21,8 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/91SH0RB-8dL._AC_UY606_.jpg'
     ],
     cost: 17.99,
+          description: 'good shit'
+
   ),
   Product(
     name: 'Polo RL V-Neck',
@@ -28,6 +31,8 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/61URnzIoCPL._AC_UX522_.jpg',
     ],
     cost: 24.99,
+          description: 'good shit'
+
   ),
   Product(
     name: 'Athletic-Fit Stretch Jeans',
@@ -36,6 +41,8 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/91Qpp%2BRPLtL._AC_UX522_.jpg',
     ],
     cost: 29.99,
+          description: 'good shit'
+
   ),
   Product(
     name: "Levi's Original Jeans",
@@ -44,6 +51,8 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/91Mf37jbSvL._AC_UX522_.jpg',
     ],
     cost: 39.99,
+          description: 'good shit'
+
   ),
   Product(
     name: '2-Pack Performance Shorts',
@@ -52,6 +61,8 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/71JYOHJ%2BS-L._AC_UX522_.jpg',
     ],
     cost: 19.99,
+          description: 'good shit'
+
   ),
   Product(
     name: "Levi's Cargo Shorts",
@@ -60,6 +71,8 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/91WJgn0FNkL._AC_UX679_.jpg',
     ],
     cost: 29.99,
+          description: 'good shit'
+
   ),
   Product(
     name: '2-Pack Short-Sleeve Crewneck',
@@ -68,6 +81,8 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/81LDpImWPAL._AC_UX522_.jpg',
     ],
     cost: 16.99,
+          description: 'good shit'
+
   ),
   Product(
     name: 'Waffle Knit Tunic Blouse',
@@ -76,6 +91,8 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/61Ojm-DnojL._AC_UY679_.jpg',
     ],
     cost: 22.99,
+          description: 'good shit'
+
   ),
   Product(
     name: 'Mid-Rise Skinny Jeans',
@@ -85,6 +102,8 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/71zLzCwbXUL._AC_UX522_.jpg',
     ],
     cost: 28.99,
+          description: 'good shit'
+
   ),
   Product(
     name: "Levi's Straight 505 Jeans",
@@ -93,6 +112,8 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/51sHwN6mDzL._AC_UX679_.jpg',
     ],
     cost: 34.99,
+          description: 'good shit'
+
   ),
   Product(
     name: "Levi's 715 Bootcut Jeans",
@@ -101,6 +122,8 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/81qmkt1Be0L._AC_UY679_.jpg',
     ],
     cost: 34.99,
+          description: 'good shit'
+
 
   ),
   Product(
@@ -110,6 +133,8 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/71K1NzmHCfL._AC_SL1000_.jpg',
     ],
     cost: 9.99,
+          description: 'good shit'
+
   ),
   Product(
     name: 'Wobble Wag Giggle Ball',
@@ -118,6 +143,8 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/81Ye9KrP3pL._AC_SY355_.jpg',
     ],
     cost: 11.99,
+          description: 'good shit'
+
   ),
   Product(
     name: 'Duck Hide Twists',
@@ -126,6 +153,8 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/81z4lvRtc5L._SL1500_.jpg',
     ],
     cost: 8.99,
+          description: 'good shit'
+
   ),
   Product(
     name: "Zuke's Mini Training Treats",
@@ -134,5 +163,7 @@ List<Product> products = [
       'https://images-na.ssl-images-amazon.com/images/I/81K30Bs9C6L._AC_SY355_.jpg',
     ],
     cost: 10.99,
+          description: 'good shit'
+
   ),
 ];

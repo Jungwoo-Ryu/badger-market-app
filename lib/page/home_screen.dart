@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../DTO/product_tile.dart';
 import '../DTO/products.dart';
-import '../cart/cart_app_bar_action.dart';
 import '../components/my_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -57,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         actions: const [
-          CartAppBarAction(),
+          // CartAppBarAction(),
         ],
         backgroundColor: Colors.red,
       ),

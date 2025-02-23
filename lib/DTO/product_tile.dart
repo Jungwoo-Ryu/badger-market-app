@@ -1,6 +1,7 @@
 
 import 'package:badger_market/DTO/product.dart';
 import 'package:badger_market/DTO/product_image.dart';
+import 'package:badger_market/cart/product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,10 +15,10 @@ class ProductTile extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         SystemSound.play(SystemSoundType.click);
-        // _pushScreen(
-        //   context: context,
-        //   screen: ProductScreen(product: product),
-        // );
+        _pushScreen(
+          context: context,
+          screen: ProductScreen(product: product),
+        );
       },
       child: SizedBox(
         width: 150,
@@ -45,6 +46,13 @@ class ProductTile extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _pushScreen({required BuildContext context, required Widget screen}) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => screen),
     );
   }
 }

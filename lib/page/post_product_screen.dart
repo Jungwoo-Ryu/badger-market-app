@@ -23,14 +23,14 @@ class _PostProductScreenState extends State<PostProductScreen> {
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final List<XFile?> images = await picker.pickMultiImage();
-    if (images.length <= 3) {
+    if (_imageFiles.length + images.length <= 10) {
       setState(() {
         _imageFiles.addAll(images);
       });
     } else {
-      // Show an error message if more than 3 images are selected
+      // Show an error message if more than 10 images are selected
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('You can only select up to 3 images.')),
+        SnackBar(content: Text('You can only select up to 10 images.')),
       );
     }
   }
@@ -96,6 +96,57 @@ class _PostProductScreenState extends State<PostProductScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                GestureDetector(
+                  onTap: _pickImage,
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.camera_alt, size: 30, color: Colors.grey),
+                        Text('${_imageFiles.length}/10', style: TextStyle(color: Colors.grey)),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: _imageFiles.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    XFile? file = entry.value;
+                    return Stack(
+                      children: [
+                        Image.file(
+                          File(file!.path),
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                        ),
+                        Positioned(
+                          right: 0,
+                          child: GestureDetector(
+                            onTap: () => _removeImage(index),
+                            child: Container(
+                              color: Colors.black54,
+                              child: Icon(
+                                CupertinoIcons.clear_circled,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(labelText: 'Product Name'),
@@ -110,6 +161,8 @@ class _PostProductScreenState extends State<PostProductScreen> {
                 TextFormField(
                   controller: _descriptionController,
                   decoration: InputDecoration(labelText: 'Product Description'),
+                  maxLines: 5,
+                  keyboardType: TextInputType.multiline,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a product description';
@@ -141,43 +194,6 @@ class _PostProductScreenState extends State<PostProductScreen> {
                     }
                     return null;
                   },
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _pickImage,
-                  child: Text('Upload Images'),
-                ),
-                const SizedBox(height: 16),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: _imageFiles.asMap().entries.map((entry) {
-                    int index = entry.key;
-                    XFile? file = entry.value;
-                    return Stack(
-                      children: [
-                        Image.file(
-                          File(file!.path),
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                        Positioned(
-                          right: 0,
-                          child: GestureDetector(
-                            onTap: () => _removeImage(index),
-                            child: Container(
-                              color: Colors.black54,
-                              child: Icon(
-                                CupertinoIcons.clear_circled,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  }).toList(),
                 ),
                 const SizedBox(height: 16),
                 Center(

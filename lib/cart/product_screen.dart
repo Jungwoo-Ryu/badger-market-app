@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../DTO/product.dart';
-import '../page/home_page.dart';
-import 'call_to_action_button.dart';
-import 'cart.dart';
-import 'cart_app_bar_action.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({required this.product, Key? key}) : super(key: key);
@@ -17,24 +13,16 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> {
   Product get product => widget.product;
   String? selectedImageUrl;
-  String? selectedSize;
 
   @override
   void initState() {
-    selectedImageUrl = product.imageUrls.first;
-    selectedSize = product.sizes?.first;
     super.initState();
+    selectedImageUrl = product.imageUrls.first;
   }
 
   void setSelectedImageUrl(String url) {
     setState(() {
       selectedImageUrl = url;
-    });
-  }
-
-  void setSelectedSize(String size) {
-    setState(() {
-      selectedSize = size;
     });
   }
 
@@ -68,46 +56,9 @@ class _ProductScreenState extends State<ProductScreen> {
         )
         .toList();
 
-    List<Widget> sizeSelectionWidgets = product.sizes
-            ?.map(
-              (s) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 1),
-                child: GestureDetector(
-                  onTap: () {
-                    setSelectedSize(s);
-                  },
-                  child: Container(
-                    height: 42,
-                    width: 38,
-                    decoration: BoxDecoration(
-                      color: selectedSize == s
-                          ? Theme.of(context).colorScheme.secondary
-                          : null,
-                      border: Border.all(
-                        color: Colors.grey[350]!,
-                        width: 1.25,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: Text(
-                        s,
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: selectedSize == s ? Colors.white : null),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            )
-            .toList() ??
-        [];
-
     return Scaffold(
       appBar: AppBar(
-        actions: const [
-          CartAppBarAction(),
-        ],
+        title: Text(product.name),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -154,37 +105,11 @@ class _ProductScreenState extends State<ProductScreen> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    product.description ??
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer quis purus laoreet, efficitur libero vel, feugiat ante. Vestibulum tempor, ligula.',
+                    product.description,
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium!
                         .copyWith(height: 1.5),
-                  ),
-                  const SizedBox(
-                    height: 18,
-                  ),
-                  if (sizeSelectionWidgets.isNotEmpty) ...[
-                    Text(
-                      'Size',
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: sizeSelectionWidgets,
-                    ),
-                  ],
-                  const SizedBox(height: 18),
-                  Center(
-                    child: CallToActionButton(
-                      onPressed: () => cart.add(
-                        OrderItem(
-                          product: product,
-                          selectedSize: selectedSize,
-                        ),
-                      ),
-                      labelText: 'Add to Cart',
-                    ),
                   ),
                 ],
               ),

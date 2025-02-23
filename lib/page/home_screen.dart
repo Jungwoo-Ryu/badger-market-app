@@ -25,11 +25,20 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchProducts();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    fetchProducts();
+  }
+
   Future<void> fetchProducts() async {
     setState(() {
       isLoading = true;
     });
-    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('products').get();
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .orderBy('cret_wk_dtm', descending: true)
+        .get();
     setState(() {
       products = snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
       isLoading = false;
@@ -40,11 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
         searchString = value;
       });
 
-  void _postProduct() {
-    Navigator.push(
+  void _postProduct() async {
+    await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => PostProductScreen()),
     );
+    fetchProducts(); // Refresh the products when returning from the PostProductScreen
   }
 
   @override

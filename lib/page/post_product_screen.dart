@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PostProductScreen extends StatefulWidget {
   const PostProductScreen({Key? key}) : super(key: key);
@@ -21,6 +22,7 @@ class _PostProductScreenState extends State<PostProductScreen> {
   final _priceController = TextEditingController();
   final List<XFile?> _imageFiles = [];
   bool _isHovering = false;
+  bool _isUploading = false;
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -57,33 +59,57 @@ class _PostProductScreenState extends State<PostProductScreen> {
 
   Future<List<String>> _uploadImages() async {
     List<String> imageUrls = [];
+    List<Future<String>> uploadTasks = [];
+
     for (XFile? imageFile in _imageFiles) {
       if (imageFile != null) {
-        try {
-          File file = File(imageFile.path);
-          String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-          Reference storageRef = FirebaseStorage.instance.ref().child('products/$fileName');
-          UploadTask uploadTask = storageRef.putFile(file);
-          TaskSnapshot taskSnapshot = await uploadTask;
-          String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-          imageUrls.add(downloadUrl);
-          print('Uploaded image URL: $downloadUrl'); // Log the uploaded image URL
-        } catch (e) {
-          print('Error uploading image: $e');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error uploading image: $e')),
-          );
-        }
+        uploadTasks.add(_uploadImage(imageFile));
       }
     }
+
+    imageUrls = await Future.wait(uploadTasks);
     return imageUrls;
+  }
+
+  Future<String> _uploadImage(XFile imageFile) async {
+    try {
+      File file = File(imageFile.path);
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference storageRef = FirebaseStorage.instance.ref().child('products/$fileName');
+      UploadTask uploadTask = storageRef.putFile(file);
+      TaskSnapshot taskSnapshot = await uploadTask;
+      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      print('Uploaded image URL: $downloadUrl'); // Log the uploaded image URL
+      return downloadUrl;
+    } catch (e) {
+      print('Error uploading image: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error uploading image: $e')),
+      );
+      return '';
+    }
   }
 
   Future<void> _submitProduct() async {
     if (_formKey.currentState!.validate()) {
+      if (_imageFiles.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please attach at least one image.')),
+        );
+        return;
+      }
+
+      setState(() {
+        _isUploading = true;
+      });
+
       // Upload images and get their URLs
       List<String> imageUrls = await _uploadImages();
       print('Image URLs: $imageUrls'); // Log the image URLs
+
+      // Get the current user's ID
+      User? user = FirebaseAuth.instance.currentUser;
+      String writerId = user?.uid ?? 'unknown';
 
       // Save product to Firebase
       await FirebaseFirestore.instance.collection('products').add({
@@ -91,6 +117,9 @@ class _PostProductScreenState extends State<PostProductScreen> {
         'description': _descriptionController.text,
         'price': double.parse(_priceController.text.replaceAll('\$', '').replaceAll(',', '')),
         'imageUrls': imageUrls,
+        'writer': writerId,
+        'status': 'available',
+        'cret_wk_dtm': FieldValue.serverTimestamp(),
       });
 
       // Clear the form
@@ -99,6 +128,7 @@ class _PostProductScreenState extends State<PostProductScreen> {
       _priceController.clear();
       setState(() {
         _imageFiles.clear();
+        _isUploading = false;
       });
 
       // Show a success message
@@ -242,16 +272,20 @@ class _PostProductScreenState extends State<PostProductScreen> {
                     onHover: (event) => setState(() => _isHovering = true),
                     onExit: (event) => setState(() => _isHovering = false),
                     child: ElevatedButton(
-                      onPressed: _submitProduct,
+                      onPressed: _isUploading ? null : _submitProduct,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _isHovering
                             ? const Color.fromRGBO(161, 32, 43, 0.8) // Slightly darker color on hover
                             : const Color.fromRGBO(161, 32, 43, 1), // Original color
                       ),
-                      child: Text(
-                        'Add Product',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      child: _isUploading
+                          ? CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            )
+                          : Text(
+                              'Add Product',
+                              style: TextStyle(color: Colors.white),
+                            ),
                     ),
                   ),
                 ),

@@ -50,11 +50,13 @@ class LoginPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ImageIcon(
-              AssetImage("assets/images/Bucky.png"),
-              size: 100,
-              color:Colors.red.shade400,
+            Center(
+              child: Image.asset(
+                'assets/images/Bucky.png',
+                width: 100,
+                fit: BoxFit.cover,
               ),
+            ),
             // Logo
             // Icon(
             //   Icons.message,
@@ -86,8 +88,10 @@ class LoginPage extends StatelessWidget {
              controller: _pwController,
              ),
              const SizedBox(height: 25),
+            
              MyButton(
               text: "Login",
+              // style: const Color.fromRGBO(161, 32, 43, 1), // Set button color
               onTap: () => login(context),
              ),
 

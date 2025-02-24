@@ -11,8 +11,8 @@ A new Flutter project.
 +------------------+       +------------------+       +--------------------+       +------------------+
 |      User        |       |     Product      |       |     ChatRoom       |       |     Message      |
 +------------------+       +------------------+       +--------------------+       +------------------+
-| uid (PK)         |<----- | product_id (PK)  |<----- | user_id (PK, FK)   |<----- | message_id (PK)  |
-| username (Unique)|       | title            |       | product_id (PK, FK)|       | user_id (FK)     |
+| uid (PK)         |<----- | product_id (PK)  |<----- | uid (PK, FK)       |<----- | message_id (PK)  |
+| username (Unique)|       | title            |       | product_id (PK, FK)|       | uid     (FK)     |
 | email (Unique)   |       | description      |       | created_at         |       | product_id (FK)  |
 | password         |       | price            |       +--------------------+       | sender_id (FK)   |
 | created_at       |       | status           |                                    | content          |

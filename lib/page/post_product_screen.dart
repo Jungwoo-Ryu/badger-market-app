@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:badger_market/common/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,7 +18,7 @@ class PostProductScreen extends StatefulWidget {
 
 class _PostProductScreenState extends State<PostProductScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
+  final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _priceController = TextEditingController();
   final List<XFile?> _imageFiles = [];
@@ -33,8 +34,18 @@ class _PostProductScreenState extends State<PostProductScreen> {
       });
     } else {
       // Show an error message if more than 5 images are selected
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('You can only select up to 5 images.')),
+      showCupertinoDialog(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+          title: Text("Error"),
+          content: Text('You can only select up to 5 images.'),
+          actions: [
+            CupertinoDialogAction(
+              child: Text("OK"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
       );
     }
   }
@@ -47,14 +58,8 @@ class _PostProductScreenState extends State<PostProductScreen> {
 
   String _formatPrice(String value) {
     if (value.isEmpty) return '';
-    value = value.replaceAll(RegExp(r'[^\d.]'), '');
-    final parts = value.split('.');
-    if (parts.length > 2) return value;
-    final integerPart = parts[0];
-    final decimalPart = parts.length > 1 ? parts[1] : '';
-    final formattedIntegerPart = integerPart.replaceAllMapped(
-        RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
-    return '\$' + formattedIntegerPart + (decimalPart.isNotEmpty ? '.$decimalPart' : '');
+    value = value.replaceAll(RegExp(r'[^\d]'), '');
+    return '\$' + value;
   }
 
   Future<List<String>> _uploadImages() async {
@@ -83,18 +88,52 @@ class _PostProductScreenState extends State<PostProductScreen> {
       return downloadUrl;
     } catch (e) {
       print('Error uploading image: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error uploading image: $e')),
+      showCupertinoDialog(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+          title: Text("Error"),
+          content: Text('Error uploading image: $e'),
+          actions: [
+            CupertinoDialogAction(
+              child: Text("OK"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
       );
       return '';
+    }
+  }
+
+  Future<int> _getNextProductId() async {
+    DocumentReference counterRef = FirebaseFirestore.instance.collection('counters').doc('product_id');
+    DocumentSnapshot counterSnapshot = await counterRef.get();
+
+    if (!counterSnapshot.exists) {
+      await counterRef.set({'count': 1});
+      return 1;
+    } else {
+      int currentCount = counterSnapshot['count'];
+      await counterRef.update({'count': FieldValue.increment(1)});
+      return currentCount + 1;
     }
   }
 
   Future<void> _submitProduct() async {
     if (_formKey.currentState!.validate()) {
       if (_imageFiles.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Please attach at least one image.')),
+        showCupertinoDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+            title: Text("Error"),
+            content: Text('Please attach at least one image.'),
+            actions: [
+              CupertinoDialogAction(
+                child: Text("OK"),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
         );
         return;
       }
@@ -103,41 +142,66 @@ class _PostProductScreenState extends State<PostProductScreen> {
         _isUploading = true;
       });
 
-      // Upload images and get their URLs
-      List<String> imageUrls = await _uploadImages();
-      print('Image URLs: $imageUrls'); // Log the image URLs
+      showLoadingDialog(context); // Show loading dialog
 
-      // Get the current user's ID
-      User? user = FirebaseAuth.instance.currentUser;
-      String writerId = user?.uid ?? 'unknown';
+      try {
+        // Upload images and get their URLs
+        List<String> imageUrls = await _uploadImages();
+        print('Image URLs: $imageUrls'); // Log the image URLs
 
-      // Save product to Firebase
-      await FirebaseFirestore.instance.collection('products').add({
-        'name': _nameController.text,
-        'description': _descriptionController.text,
-        'price': double.parse(_priceController.text.replaceAll('\$', '').replaceAll(',', '')),
-        'imageUrls': imageUrls,
-        'writer': writerId,
-        'status': 'available',
-        'cret_wk_dtm': FieldValue.serverTimestamp(),
-      });
+        // Get the current user's ID
+        User? user = FirebaseAuth.instance.currentUser;
+        String writerId = user?.uid ?? 'unknown';
 
-      // Clear the form
-      _nameController.clear();
-      _descriptionController.clear();
-      _priceController.clear();
-      setState(() {
-        _imageFiles.clear();
-        _isUploading = false;
-      });
+        // Get the next product ID
+        int productId = await _getNextProductId();
 
-      // Show a success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Product added successfully!')),
-      );
+        // Save product to Firebase
+        await FirebaseFirestore.instance.collection('products').add({
+          'product_id': productId,
+          'title': _titleController.text,
+          'description': _descriptionController.text,
+          'price': int.parse(_priceController.text.replaceAll('\$', '').replaceAll(',', '')),
+          'imageUrls': imageUrls,
+          'status': 'ACTIVE',
+          'created_by': writerId,
+          'cret_wk_dtm': FieldValue.serverTimestamp(),
+        });
 
-      // Navigate back to the previous screen
-      Navigator.pop(context);
+        // Clear the form
+        _titleController.clear();
+        _descriptionController.clear();
+        _priceController.clear();
+        setState(() {
+          _imageFiles.clear();
+          _isUploading = false;
+        });
+
+        hideLoadingDialog(context); // Hide loading dialog
+
+        // Show a success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Product added successfully!')),
+        );
+
+        // Navigate back to the previous screen
+        Navigator.pop(context);
+      } catch (e) {
+        hideLoadingDialog(context); // Hide loading dialog on error
+        showCupertinoDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+            title: Text("Error"),
+            content: Text('Error adding product: $e'),
+            actions: [
+              CupertinoDialogAction(
+                child: Text("OK"),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
@@ -209,15 +273,15 @@ class _PostProductScreenState extends State<PostProductScreen> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  controller: _nameController,
+                  controller: _titleController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Enter a product name',
-                    labelText: 'Product Name'
+                    hintText: 'Enter a product title',
+                    labelText: 'Product Title'
                     ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a product name';
+                      return 'Please enter a product title';
                     }
                     return null;
                   },
@@ -244,6 +308,7 @@ class _PostProductScreenState extends State<PostProductScreen> {
                   decoration: InputDecoration(
                     labelText: 'Price',
                     border: OutlineInputBorder(),
+                    // prefixText: '\$',
                   ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
@@ -260,7 +325,7 @@ class _PostProductScreenState extends State<PostProductScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a price';
                     }
-                    if (double.tryParse(value.replaceAll('\$', '').replaceAll(',', '')) == null) {
+                    if (int.tryParse(value.replaceAll('\$', '').replaceAll(',', '')) == null) {
                       return 'Please enter a valid price';
                     }
                     return null;

@@ -35,14 +35,21 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       isLoading = true;
     });
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('products')
-        .orderBy('cret_wk_dtm', descending: true)
-        .get();
-    setState(() {
-      products = snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
-      isLoading = false;
-    });
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('products')
+          .orderBy('cret_wk_dtm', descending: true)
+          .get();
+      setState(() {
+        products = snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching products: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   void setSearchString(String value) => setState(() {
@@ -64,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (searchString.isNotEmpty) {
       searchResultTiles = products
           .where(
-              (p) => p.name.toLowerCase().contains(searchString.toLowerCase()))
+              (p) => p.title.toLowerCase().contains(searchString.toLowerCase()))
           .map(
             (p) => ProductTile(product: p),
           )

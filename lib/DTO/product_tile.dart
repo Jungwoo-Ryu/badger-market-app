@@ -30,14 +30,14 @@ class ProductTile extends StatelessWidget {
               height: 8,
             ),
             Text(
-              product.name,
+              product.title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.titleSmall,
             ),
             const Spacer(),
             Text(
-              '\$${product.cost.toString()}',
+              '\$${product.price.toString()}',
               style: Theme.of(context)
                   .textTheme
                   .titleSmall!

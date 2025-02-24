@@ -22,31 +22,32 @@ class RegisterPage extends StatelessWidget {
   void register(BuildContext context) async {
     //get auth service
     final _auth = AuthService();
-    if (!_emailController.text.endsWith("@wisc.edu")) {
-      showCupertinoDialog(
-        context: context,
-        builder: (context) => CupertinoAlertDialog(
-          title: Text("Invalid Email"),
-          content: Text("Email must end with '@wisc.edu'"),
-          actions: [
-            CupertinoDialogAction(
-              child: Text("OK"),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      );
-    } else {
+    // TODO. Check if email ends with @wisc.edu later
+    // if (!_emailController.text.endsWith("@wisc.edu")) {
+    //   showCupertinoDialog(
+    //     context: context,
+    //     builder: (context) => CupertinoAlertDialog(
+    //       title: Text("Invalid Email"),
+    //       content: Text("Email must end with '@wisc.edu'"),
+    //       actions: [
+    //         CupertinoDialogAction(
+    //           child: Text("OK"),
+    //           onPressed: () => Navigator.of(context).pop(),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // } else {
       if (_pwController.text == _confirmPwController.text) {
         try {
           // Check for duplicate username and email
           QuerySnapshot usernameSnapshot = await FirebaseFirestore.instance
-              .collection('users')
+              .collection('Users')
               .where('username', isEqualTo: _usernameController.text)
               .get();
 
           QuerySnapshot emailSnapshot = await FirebaseFirestore.instance
-              .collection('users')
+              .collection('Users')
               .where('email', isEqualTo: _emailController.text)
               .get();
 
@@ -84,7 +85,7 @@ class RegisterPage extends StatelessWidget {
 
           User? user = userCredential.user;
           if (user != null) {
-            await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+            await FirebaseFirestore.instance.collection('Users').doc(user.uid).set({
               'username': _usernameController.text,
               'email': _emailController.text,
               'created_at': FieldValue.serverTimestamp(),
@@ -134,7 +135,7 @@ class RegisterPage extends StatelessWidget {
           ),
         );
       }
-    }
+    // }
   }
 
   @override

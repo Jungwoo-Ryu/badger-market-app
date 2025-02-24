@@ -151,7 +151,7 @@ class _PostProductScreenState extends State<PostProductScreen> {
 
         // Get the current user's ID
         User? user = FirebaseAuth.instance.currentUser;
-        String writerId = user?.uid ?? 'unknown';
+        String createdBy = user?.uid ?? 'unknown';
 
         // Get the next product ID
         int productId = await _getNextProductId();
@@ -164,8 +164,8 @@ class _PostProductScreenState extends State<PostProductScreen> {
           'price': int.parse(_priceController.text.replaceAll('\$', '').replaceAll(',', '')),
           'imageUrls': imageUrls,
           'status': 'ACTIVE',
-          'created_by': writerId,
-          'cret_wk_dtm': FieldValue.serverTimestamp(),
+          'created_by': createdBy,
+          'created_at': FieldValue.serverTimestamp(),
         });
 
         // Clear the form

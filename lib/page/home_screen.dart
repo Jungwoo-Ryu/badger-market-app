@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('products')
-          .orderBy('cret_wk_dtm', descending: true)
+          .orderBy('created_at', descending: true)
           .get();
       setState(() {
         products = snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
@@ -102,11 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: searchResultTiles.isNotEmpty
                   ? Padding(
                       padding: listViewPadding,
-                      child: GridView.count(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 8, // Adjusted spacing
-                        crossAxisSpacing: 8, // Adjusted spacing
-                        childAspectRatio: .7,
+                      child: ListView(
                         children: searchResultTiles,
                       ),
                     )

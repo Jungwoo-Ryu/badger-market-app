@@ -58,7 +58,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(product.name),
+        title: Text(product.title),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -91,14 +91,14 @@ class _ProductScreenState extends State<ProductScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.name,
+                    product.title,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(
                     height: 4,
                   ),
                   Text(
-                    '\$${product.cost}',
+                    '\$${product.price}',
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
                           color: Theme.of(context).colorScheme.secondary,
                         ),

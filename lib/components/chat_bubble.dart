@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ChatBubble extends StatelessWidget {
@@ -15,13 +14,13 @@ class ChatBubble extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         decoration: BoxDecoration(
-          color: isCurrentUser ? CupertinoColors.activeBlue : CupertinoColors.lightBackgroundGray,
+          color: isCurrentUser ? const Color.fromRGBO(161, 32, 43, 1) : const Color.fromRGBO(255, 204, 204, 1), // Different shades of red
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           message,
           style: TextStyle(
-            color: isCurrentUser ? CupertinoColors.white : CupertinoColors.black,
+            color: isCurrentUser ? Colors.white : Colors.black,
           ),
         ),
       ),

@@ -23,7 +23,7 @@ class ChatService{
   }
 
   // send message
-  Future<void> sendMesssage(String receiverID, message) async {
+  Future<void> sendMessage(String receiverID, message) async {
     // get current user info
     final String currentUserID = _auth.currentUser!.uid;
     final String currentUserEmail = _auth.currentUser!.email!;

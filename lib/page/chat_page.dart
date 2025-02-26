@@ -26,7 +26,7 @@ class ChatPage extends StatelessWidget {
     // if there is something inside the textfield
     if (_messageController.text.isNotEmpty) {
       // send the message
-      await _chatService.sendMesssage(receiverID, _messageController.text);
+      await _chatService.sendMessage(receiverID, _messageController.text);
     }
 
     // clear text controller
@@ -91,7 +91,7 @@ class ChatPage extends StatelessWidget {
 
   Widget _buildUserInput(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(30.0),
       child: Row(
         children: [
           // textfield should take up most of the space

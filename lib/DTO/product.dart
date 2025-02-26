@@ -7,6 +7,7 @@ class Product {
   final String createdBy;
   final Timestamp createdAt;
   final List<String> imageUrls;
+  final int productId;
 
   Product({
     required this.title,
@@ -14,7 +15,8 @@ class Product {
     required this.description,
     required this.imageUrls,
     required this.createdBy,
-    required this.createdAt
+    required this.createdAt, 
+    required this.productId
   });
   
   factory Product.fromFirestore(DocumentSnapshot doc) {
@@ -26,6 +28,7 @@ class Product {
       createdAt: data['created_at'], 
       description: data['description'],
       imageUrls: List<String>.from(data['imageUrls']),
+      productId: data['product_id']
       // Initialize your fields here using data
     );
   }

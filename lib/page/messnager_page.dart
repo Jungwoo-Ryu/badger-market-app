@@ -27,6 +27,7 @@ class MessengerPage extends StatelessWidget {
       builder: (context, snapshot) {
         // error
         if (snapshot.hasError) {
+          print("Error: ${snapshot.error}");
           return const Text("Error");
         }
         // Loading..
@@ -34,6 +35,10 @@ class MessengerPage extends StatelessWidget {
           return const Text("Loading..");
         }
         // return list view
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          print("No chat rooms found");
+          return const Text("No chat rooms found");
+        }
         return ListView(
           children: snapshot.data!
               .map<Widget>((chatRoomData) => _buildChatRoomListItem(chatRoomData, context))
@@ -56,29 +61,33 @@ class MessengerPage extends StatelessWidget {
           return const CircularProgressIndicator();
         }
         if (userSnapshot.hasError) {
+          print("User data error: ${userSnapshot.error}");
           return const Text("Error");
         }
         if (!userSnapshot.hasData || userSnapshot.data!.data() == null) {
+          print("No user data found for userID: $otherUserID");
           return const Text("No data");
         }
 
         var userData = userSnapshot.data!.data() as Map<String, dynamic>;
         String username = userData['username'];
 
-        return FutureBuilder<DocumentSnapshot>(
-          future: FirebaseFirestore.instance.collection('products').doc(productID).get(),
+        return FutureBuilder<QuerySnapshot>(
+          future: FirebaseFirestore.instance.collection('products').where('product_id', isEqualTo: int.parse(productID)).get(),
           builder: (context, productSnapshot) {
             if (productSnapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
             }
             if (productSnapshot.hasError) {
+              print("Product data error: ${productSnapshot.error}");
               return const Text("Error");
             }
-            if (!productSnapshot.hasData || productSnapshot.data!.data() == null) {
+            if (!productSnapshot.hasData || productSnapshot.data!.docs.isEmpty) {
+              print("No product data found for productID: $productID");
               return const Text("No data");
             }
 
-            var productData = productSnapshot.data!.data() as Map<String, dynamic>;
+            var productData = productSnapshot.data!.docs.first.data() as Map<String, dynamic>;
             String productImageUrl = productData['imageUrls'][0];
 
             return ListTile(

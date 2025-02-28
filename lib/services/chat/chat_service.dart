@@ -41,7 +41,7 @@ class ChatService {
   }
 
   Future<DocumentSnapshot> getUserData(String userID) async {
-    return await FirebaseFirestore.instance.collection('users').doc(userID).get();
+    return await FirebaseFirestore.instance.collection('Users').doc(userID).get();
   }
 
   // send message

@@ -7,11 +7,13 @@ import 'package:flutter/material.dart';
 class ChatPage extends StatelessWidget {
   final String receiverEmail;
   final String receiverID;
+  final int productID;
 
   ChatPage({
     super.key,
     required this.receiverEmail,
     required this.receiverID,
+    required this.productID,
   });
 
   // text controller
@@ -26,7 +28,7 @@ class ChatPage extends StatelessWidget {
     // if there is something inside the textfield
     if (_messageController.text.isNotEmpty) {
       // send the message
-      await _chatService.sendMessage(receiverID, _messageController.text);
+      await _chatService.sendMessage(receiverID, _messageController.text, productID);
     }
 
     // clear text controller
@@ -36,7 +38,10 @@ class ChatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(receiverEmail)),
+      appBar: AppBar(
+        title: Text(receiverEmail),
+        backgroundColor: const Color.fromRGBO(161, 32, 43, 1), // Badger red color
+      ),
       body: Column(
         children: [
           // display all messages
@@ -51,7 +56,7 @@ class ChatPage extends StatelessWidget {
   Widget _buildMessageList() {
     String senderID = _authService.getCurrentUser()!.uid;
     return StreamBuilder(
-      stream: _chatService.getMessages(receiverID, senderID),
+      stream: _chatService.getMessages(receiverID, senderID, productID),
       builder: (context, snapshot) {
         // errors
         if (snapshot.hasError) {
@@ -76,22 +81,15 @@ class ChatPage extends StatelessWidget {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     bool isCurrentUser = data['senderID'] == _authService.getCurrentUser()!.uid;
 
-    var alignment = isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
-
-    return Container(
-      alignment: alignment,
-      child: Column(
-        crossAxisAlignment: isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: [
-          ChatBubble(message: data["message"], isCurrentUser: isCurrentUser),
-        ],
-      ),
+    return ChatBubble(
+      message: data["message"],
+      isCurrentUser: isCurrentUser,
     );
   }
 
   Widget _buildUserInput(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(30.0),
+      padding: const EdgeInsets.all(30),
       child: Row(
         children: [
           // textfield should take up most of the space

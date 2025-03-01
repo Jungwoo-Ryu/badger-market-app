@@ -14,7 +14,7 @@ class MessengerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Messenger"),
+        title: const Text("Messenger", style: TextStyle(color: Colors.white),),
         backgroundColor: const Color.fromRGBO(161, 32, 43, 1), // Badger red color
       ),
       body: _buildChatRoomList(),
@@ -39,10 +39,17 @@ class MessengerPage extends StatelessWidget {
           print("No chat rooms found");
           return const Text("No chat rooms found");
         }
-        return ListView(
-          children: snapshot.data!
-              .map<Widget>((chatRoomData) => _buildChatRoomListItem(chatRoomData, context))
-              .toList(),
+        return ListView.builder(
+          itemCount: snapshot.data!.length,
+          itemBuilder: (context, index) {
+            final chatRoomData = snapshot.data![index];
+            return Column(
+              children: [
+                _buildChatRoomListItem(chatRoomData, context),
+                const Divider(height: 1),
+              ],
+            );
+          },
         );
       },
     );

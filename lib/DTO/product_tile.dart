@@ -46,72 +46,75 @@ class ProductTile extends StatelessWidget {
           screen: ProductScreen(product: product),
         );
       },
-      child: FutureBuilder<String>(
-        future: _fetchUsername(product.createdBy),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            String username = snapshot.data ?? 'Unknown';
-            return Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: CachedNetworkImage(
-                          imageUrl: product.imageUrls.isNotEmpty ? product.imageUrls.first : '',
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Center(child: CircularProgressIndicator()), // 로딩 중 표시
-                          errorWidget: (context, url, error) => Icon(Icons.error), // 오류 시 대체 이미지
+      child: Material(
+        color: Colors.transparent,
+        child: FutureBuilder<String>(
+          future: _fetchUsername(product.createdBy),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              String username = snapshot.data ?? 'Unknown';
+              return Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: CachedNetworkImage(
+                            imageUrl: product.imageUrls.isNotEmpty ? product.imageUrls.first : '',
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Center(child: CircularProgressIndicator()), // 로딩 중 표시
+                            errorWidget: (context, url, error) => Icon(Icons.error), // 오류 시 대체 이미지
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              product.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              _timeAgo(product.createdAt),
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              '\$${formatPrice(product.price)}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Seller: $username',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                product.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                _timeAgo(product.createdAt),
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                '\$${formatPrice(product.price)}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Seller: $username',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Divider(thickness: 1),
-              ],
-            );
-          }
-        },
+                  Divider(thickness: 1),
+                ],
+              );
+            }
+          },
+        ),
       ),
     );
   }

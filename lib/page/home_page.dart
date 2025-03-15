@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData.light(),
+      data: ThemeData.dark(),
       child: Builder(
         builder: (context) => const HomeScreen(),
       ),

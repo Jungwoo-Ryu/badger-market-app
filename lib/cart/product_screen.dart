@@ -46,7 +46,6 @@ class _ProductScreenState extends State<ProductScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => ChatPage(
-          receiverEmail: product.createdBy,
           receiverID: product.createdBy,
           productID: product.productId,
         ),
@@ -68,7 +67,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(product.title),
+        title: Text("Product Details"),
       ),
       body: SingleChildScrollView(
         child: Column(

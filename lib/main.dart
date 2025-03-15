@@ -1,4 +1,5 @@
 // import 'package:badger_market/page/home.dart';
+import 'package:badger_market/core/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 // import 'package:badger_market/page/loginPage.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Badger Market',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-      ),
+      theme: AppTheme.darkThemeMode,
       home: const AuthGate(),
 
     );

@@ -1,28 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatBubble extends StatelessWidget {
   final String message;
   final bool isCurrentUser;
+  final Timestamp timestamp;
 
-  const ChatBubble({required this.message, required this.isCurrentUser, Key? key}) : super(key: key);
+  ChatBubble({
+    required this.message,
+    required this.isCurrentUser,
+    required this.timestamp,
+  });
 
   @override
   Widget build(BuildContext context) {
+    DateTime dateTime = timestamp.toDate();
+    String formattedTime = '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+
     return Align(
       alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(top: 5, bottom: 5, left: 60, right: 20),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-        decoration: BoxDecoration(
-          color: isCurrentUser ? const Color.fromARGB(255, 204, 65, 77) : const Color.fromRGBO(255, 204, 204, 1), // Different shades of red
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          message,
-          style: TextStyle(
-            color: isCurrentUser ? Colors.white : Colors.black,
+      child: Column(
+        crossAxisAlignment: isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (isCurrentUser) ...[
+                Text(
+                  formattedTime,
+                  style: TextStyle(color: Colors.grey, fontSize: 12.0),
+                ),
+                SizedBox(width: 5),
+              ],
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                padding: const EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: isCurrentUser ? Colors.blue : Colors.grey,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Text(
+                  message,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              if (!isCurrentUser) ...[
+                SizedBox(width: 5),
+                Text(
+                  formattedTime,
+                  style: TextStyle(color: Colors.grey, fontSize: 12.0),
+                ),
+              ],
+            ],
           ),
-        ),
+        ],
       ),
     );
   }

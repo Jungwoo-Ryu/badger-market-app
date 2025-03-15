@@ -114,7 +114,6 @@ class MessengerPage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ChatPage(
-                      receiverEmail: userData['email'],
                       receiverID: otherUserID,
                       productID: int.parse(productID),
                     ),

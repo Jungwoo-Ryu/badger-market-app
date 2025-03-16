@@ -68,19 +68,6 @@ class _ChatPageState extends State<ChatPage> {
         backgroundColor: const Color.fromRGBO(161, 32, 43, 1), // Badger red color
       ),
       body: GestureDetector(
-        onHorizontalDragUpdate: (details) {
-          if (details.primaryDelta! < -10) {
-            // Swiping left
-            setState(() {
-              showTimestamps = true;
-            });
-          } else if (details.primaryDelta! > 10) {
-            // Swiping right
-            setState(() {
-              showTimestamps = false;
-            });
-          }
-        },
         child: Column(
           children: [
             // display all messages

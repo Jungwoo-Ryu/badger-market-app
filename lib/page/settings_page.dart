@@ -1,3 +1,4 @@
+import 'package:badger_market/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
 
@@ -6,6 +7,11 @@ class SettingsPage extends StatelessWidget {
   
   get value => null;
 
+  void logout() {
+    // get auth service
+    final auth = AuthService();
+    auth.signOut();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,10 +24,12 @@ class SettingsPage extends StatelessWidget {
           SettingsSection(
             title: Text('Section'),
             tiles: [
-              SettingsTile.navigation(
-                title: Text('Language'),
-                leading: Icon(Icons.language),
-                onPressed: (BuildContext context) {},
+              SettingsTile(
+                title: Text('Sign Out'),
+                leading: Icon(Icons.logout),
+                onPressed: (BuildContext context) {
+                  logout();
+                },
               ),
             ],
           ),

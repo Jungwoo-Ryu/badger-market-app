@@ -81,6 +81,7 @@ class RegisterPage extends StatelessWidget {
           UserCredential userCredential = await _auth.signUpWithEmailPassword(
             _emailController.text,
             _pwController.text,
+            _usernameController.text,
           );
 
           User? user = userCredential.user;

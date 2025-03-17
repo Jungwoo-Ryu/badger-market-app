@@ -1,6 +1,7 @@
 import 'package:badger_market/DTO/product.dart';
 import 'package:badger_market/page/messnager_page.dart';
 import 'package:badger_market/page/post_product_screen.dart';
+import 'package:badger_market/page/settings_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -132,13 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       MessengerPage(
       ),
-      Scaffold(
-        appBar: AppBar(
-          title: Text('Profile'),
-          backgroundColor: const Color.fromRGBO(161, 32, 43, 1),
-        ),
-        body: Center(child: Text('Profile')),
-      ),
+      SettingsPage(),
     ];
 
     return Scaffold(

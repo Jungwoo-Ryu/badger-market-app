@@ -1,6 +1,7 @@
 import 'package:badger_market/page/chat_page.dart';
 import 'package:badger_market/services/auth/auth_service.dart';
 import 'package:badger_market/services/chat/chat_service.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -99,7 +100,7 @@ class MessengerPage extends StatelessWidget {
 
             return ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(productImageUrl),
+                backgroundImage: CachedNetworkImageProvider(productImageUrl),
               ),
               title: Text(username),
               subtitle: Column(

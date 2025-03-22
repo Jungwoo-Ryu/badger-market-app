@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:insta_image_viewer/insta_image_viewer.dart';
 
 import '../DTO/product.dart';
 
@@ -54,12 +55,14 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   Widget buildProductImage(String imageUrl) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      placeholder: (context, url) => Center(child: CircularProgressIndicator()), // 로딩 중 표시
-      errorWidget: (context, url, error) => Icon(Icons.error), // 오류 시 대체 이미지
-      fit: BoxFit.cover,
-      width: double.infinity,
+    return InstaImageViewer(
+      child: CachedNetworkImage(
+        imageUrl: imageUrl,
+        placeholder: (context, url) => Center(child: CircularProgressIndicator()), // 로딩 중 표시
+        errorWidget: (context, url, error) => Icon(Icons.error), // 오류 시 대체 이미지
+        fit: BoxFit.contain,
+        width: double.infinity,
+      ),
     );
   }
 

@@ -21,6 +21,7 @@ dependencies:
   flutter_settings_ui: ^3.0.0
   flutter_cache_manager: ^3.4.1
   insta_image_viewer: ^1.0.2
+  chatview: ^2.4.0
   
 dev_dependencies:
   flutter_test:

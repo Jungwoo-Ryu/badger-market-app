@@ -1,4 +1,5 @@
 import 'package:badger_market/DTO/product.dart';
+import 'package:badger_market/chat/chat_screen.dart';
 import 'package:badger_market/page/messnager_page.dart';
 import 'package:badger_market/page/post_product_screen.dart';
 import 'package:badger_market/page/settings_page.dart';
@@ -131,7 +132,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Center(child: Text('Wish List')),
       ),
-      MessengerPage(
+      // MessengerPage(
+      // ),
+      ChatScreen(
       ),
       SettingsPage(),
     ];
